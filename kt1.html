@@ -29,68 +29,80 @@
     <div id="tableContainer"></div>
 
     <script>
-
+ 
         let numbersArray = Array.from({length: 30}, () => Math.floor(Math.random() * 100));
-
-        const tableContainer = document.getElementById('tableContainer');
         
-        // Цвет на основе числа
+        const tableContainer = document.getElementById('tableContainer');
+
+        let table;
+        
+   
+        const maxColor = { r: 17, g: 99, b: 41 };
+        
+
         function getColorForNumber(number) {
 
             const intensity = number / 99;
-
             const red = Math.floor(255 * (1 - intensity));
-            const green = 255; 
+            const green = 255;
             const blue = Math.floor(255 * (1 - intensity));
             
             return `rgb(${red}, ${green}, ${blue})`;
         }
         
+     
+        function createCell(number) {
+            const cell = document.createElement('td');
+            cell.textContent = number;
+            cell.title = `Число: ${number}`;
+            cell.style.backgroundColor = getColorForNumber(number);
+            
+            if (number < 30) {
+                cell.style.color = 'black';
+                cell.style.fontWeight = 'normal';
+            } else {
+                cell.style.color = 'white';
+                cell.style.fontWeight = 'bold';
+            }
+            
+            return cell;
+        }
         
-        // Создание таблицы
+
         function createTable() {
-            const table = document.createElement('table');
+            table = document.createElement('table');
+            tableContainer.appendChild(table);
+            
 
             let currentRow = document.createElement('tr');
             table.appendChild(currentRow);
             
             for (let i = 0; i < numbersArray.length; i++) {
-
                 if (currentRow.children.length >= 6) {
                     currentRow = document.createElement('tr');
                     table.appendChild(currentRow);
                 }
                 
-                const cell = document.createElement('td');
-                const number = numbersArray[i];
-                
-                cell.textContent = number;
-                cell.title = `Число: ${number}`;
-                
-                // Цвет фона от числа
-                cell.style.backgroundColor = getColorForNumber(number);
-                
-                // Контрастный текст
-                if (number > 70) {
-                    cell.style.color = 'white';
-                    cell.style.fontWeight = 'bold';
-                }
-                
+                const cell = createCell(numbersArray[i]);
                 currentRow.appendChild(cell);
             }
-            
-            // Очищаем контейнер и добавляем таблицу
-            tableContainer.innerHTML = '';
-            tableContainer.appendChild(table);
         }
         
-
         function addNumber() {
             const newNumber = Math.floor(Math.random() * 100);
             numbersArray.push(newNumber);
-            createTable();
-        }
 
+            const rows = table.getElementsByTagName('tr');
+            let lastRow = rows[rows.length - 1];
+
+            if (lastRow.children.length >= 6) {
+                lastRow = document.createElement('tr');
+                table.appendChild(lastRow);
+            }
+
+            const newCell = createCell(newNumber);
+            lastRow.appendChild(newCell);
+        }
         window.onload = createTable;
     </script>
 </body>
