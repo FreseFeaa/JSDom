@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            min-width: 50px;
+            transition: background-color 0.3s ease;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ваша GitHub активность:</h1>
+    <button onclick="addNumber()">Добавить новый день:</button>
+    <div id="tableContainer"></div>
+
+    <script>
+
+        let numbersArray = Array.from({length: 30}, () => Math.floor(Math.random() * 100));
+
+        const tableContainer = document.getElementById('tableContainer');
+        
+        // Цвет на основе числа
+        function getColorForNumber(number) {
+
+            const intensity = number / 99;
+
+            const red = Math.floor(255 * (1 - intensity));
+            const green = 255; 
+            const blue = Math.floor(255 * (1 - intensity));
+            
+            return `rgb(${red}, ${green}, ${blue})`;
+        }
+        
+        
+        // Создание таблицы
+        function createTable() {
+            const table = document.createElement('table');
+
+            let currentRow = document.createElement('tr');
+            table.appendChild(currentRow);
+            
+            for (let i = 0; i < numbersArray.length; i++) {
+
+                if (currentRow.children.length >= 6) {
+                    currentRow = document.createElement('tr');
+                    table.appendChild(currentRow);
+                }
+                
+                const cell = document.createElement('td');
+                const number = numbersArray[i];
+                
+                cell.textContent = number;
+                cell.title = `Число: ${number}`;
+                
+                // Цвет фона от числа
+                cell.style.backgroundColor = getColorForNumber(number);
+                
+                // Контрастный текст
+                if (number > 70) {
+                    cell.style.color = 'white';
+                    cell.style.fontWeight = 'bold';
+                }
+                
+                currentRow.appendChild(cell);
+            }
+            
+            // Очищаем контейнер и добавляем таблицу
+            tableContainer.innerHTML = '';
+            tableContainer.appendChild(table);
+        }
+        
+
+        function addNumber() {
+            const newNumber = Math.floor(Math.random() * 100);
+            numbersArray.push(newNumber);
+            createTable();
+        }
+
+        window.onload = createTable;
+    </script>
+</body>
+</html>
