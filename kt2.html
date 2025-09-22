@@ -90,7 +90,7 @@
 <body>
     <div class="container">
         <h1>Хочу найти дом:</h1>
-        <div class="cats-grid" id="catsContainer"></div>
+        <div class="cats-grid" id="koshkinDOM"></div>
     </div>
 
     <script>
@@ -206,8 +206,8 @@
         }
 
 
-        const container = document.getElementById('catsContainer');
-        container.innerHTML = koshki.map(koshko => createCatCard(koshko)).join('');
+        const containerKoshek = document.getElementById('koshkinDOM');
+        containerKoshek.innerHTML = koshki.map(koshko => createCatCard(koshko)).join('');
 
     </script>
 </body>
