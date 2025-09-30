@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>КАСТОМ МЕНЮ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .menu-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            padding: 30px;
+            max-width: 350px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-title {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .menu-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+        }
+
+        .menu-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .menu-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 25px -5px rgba(66, 153, 225, 0.4),
+                0 4px 6px -2px rgba(66, 153, 225, 0.1);
+            border-color: #4299e1;
+            color: #2b6cb0;
+        }
+
+        .menu-link:hover::before {
+            left: 100%;
+        }
+
+        .menu-link.has-children::after {
+            content: '❯';
+            font-size: 14px;
+            font-weight: bold;
+            color: #718096;
+            transition: all 0.4s ease;
+            margin-left: 10px;
+        }
+
+        .menu-link.active {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+            box-shadow: 
+                0 8px 20px -6px rgba(66, 153, 225, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-link.active::after {
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .menu-link.active.has-children::after {
+            color: white;
+        }
+
+        .submenu {
+            list-style: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            margin: 8px 0 0 0;
+            border-radius: 12px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .submenu.active {
+            max-height: 800px;
+        }
+
+        .submenu .menu-link {
+            background: transparent;
+            margin-bottom: 4px;
+            padding: 14px 20px;
+            font-size: 15px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .submenu .menu-link:hover {
+            background: rgba(66, 153, 225, 0.1);
+            border-color: #4299e1;
+        }
+
+        .submenu .submenu {
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            margin: 4px 0 0 15px;
+        }
+
+        .submenu .submenu .menu-link {
+            font-size: 14px;
+            padding: 12px 20px;
+        }
+
+        .submenu .submenu .submenu {
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+        }
+
+        .message {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 
+                0 10px 25px -5px rgba(72, 187, 120, 0.4),
+                0 4px 6px -2px rgba(72, 187, 120, 0.1);
+            z-index: 10000;
+            animation: slideIn 0.5s ease, slideOut 0.5s ease 1.5s forwards;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .link-indicator {
+            font-size: 11px;
+            opacity: 0.7;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .menu-link.active .link-indicator {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Анимация пульсации для привлечения внимания */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .menu-link:not(.has-children):hover {
+            animation: pulse 0.6s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-container">
+        <h1 class="menu-title">АНАНАСЫ</h1>
+        <ul class="menu" id="mainMenu">
+            <li class="menu-item">
+                <a class="menu-link has-children">
+                    🍍 Ананасы
+                    <span class="link-indicator">+ подменю</span>
+                </a>
+                <ul class="submenu">
+                    <li class="menu-item">
+                        <a class="menu-link has-children">
+                            🗂️ Виды ананасов
+                            <span class="link-indicator">+ подменю</span>
+                        </a>
+                        <ul class="submenu">
+                            <li class="menu-item">
+                                <a class="menu-link has-children">
+                                    😎 Крутые ананасы
+                                    <span class="link-indicator">+ подменю</span>
+                                </a>
+                                <ul class="submenu">
+                                    <li class="menu-item">
+                                        <a class="menu-link">
+                                            ☀️ Сигма Ананас
+                                            <span class="link-indicator">перейти</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a class="menu-link">
+                                            🏆 Лучший Ананас Анапа 2007
+                                            <span class="link-indicator">перейти</span>
+                                        </a>
+                                    </li>
+                                    <li class="menu-item">
+                                        <a class="menu-link">
+                                            🌟 Ананас Звезда Вселенная
+                                            <span class="link-indicator">перейти</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    ⚡ Другие ананасы
+                                    <span class="link-indicator">перейти</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link has-children">
+                            📸 Фото ананасов
+                            <span class="link-indicator">+ подменю</span>
+                        </a>
+                        <ul class="submenu">
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    👣 Для детей
+                                    <span class="link-indicator">перейти</span>
+                                </a>
+                            </li>
+                            <li class="menu-item">
+                                <a class="menu-link">
+                                    ☢️ Интимные
+                                    <span class="link-indicator">перейти</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link has-children">
+                    💼 Услуги
+                    <span class="link-indicator">+ подменю</span>
+                </a>
+                <ul class="submenu">
+                    <li class="menu-item">
+                        <a class="menu-link">
+                            🔪 Вырезка
+                            <span class="link-indicator">перейти</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link">
+                            ✂️ Стрижка ананаса
+                            <span class="link-indicator">перейти</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link">
+                    🌴 О нашей Ферме
+                    <span class="link-indicator">перейти</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a class="menu-link">
+                    🐒 Контакты Фермы
+                    <span class="link-indicator">перейти</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+       const menu = document.querySelector('#mainMenu');
+
+// Событие клика на всё меню
+menu.addEventListener('click', (e) => {
+    const link = e.target.closest('.menu-link');
+    if (!link) return;
+    e.preventDefault();
+    
+    // есть ли дочернее меню
+    if (link.classList.contains('has-children')) {
+ 
+        const submenu = link.nextElementSibling;
+        
+        const parentMenu = link.closest('.submenu') || menu;
+        const activeSiblings = parentMenu.querySelectorAll('.menu-link.active');
+        
+
+        activeSiblings.forEach(sibling => {
+            if (sibling !== link) {
+                sibling.classList.remove('active');
+                const siblingSubmenu = sibling.nextElementSibling;
+                if (siblingSubmenu) {
+                    siblingSubmenu.classList.remove('active');
+                }
+            }
+        });
+
+
+        link.classList.toggle('active');
+        submenu.classList.toggle('active');
+
+    } else {
+
+        
+
+        const message = document.createElement('div');
+        message.className = 'message';
+    
+        message.innerHTML = `🎯 <strong>${link.textContent.trim()}</strong><br><small>Можно перейти по ссылке!</small>`;
+
+        document.body.append(message);
+
+
+        setTimeout(() => {
+
+            if (message.parentNode) {
+                message.remove();
+            }
+        }, 2000);
+        
+    
+        const allActive = document.querySelectorAll('.submenu.active, .menu-link.active');
+        allActive.forEach(el => el.classList.remove('active'));
+    }
+});
+
+// Закрываен меню при клике вне меню
+document.addEventListener('click', (e) => {
+
+    if (!e.target.closest('.menu-container')) {
+        const allActive = document.querySelectorAll('.submenu.active, .menu-link.active');
+        allActive.forEach(el => el.classList.remove('active'));
+    }
+});
+
+// Ивент при наведении на ссылки
+menu.addEventListener('mouseover', (e) => {
+    const link = e.target.closest('.menu-link');
+    if (link && !link.classList.contains('has-children')) {
+        link.style.background = 'linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%)';
+    }
+});
+
+// Базовый фон когда убираем курсор
+menu.addEventListener('mouseout', (e) => {
+    const link = e.target.closest('.menu-link');
+    if (link && !link.classList.contains('has-children') && !link.classList.contains('active')) {
+        link.style.background = '';
+    }
+});
+    </script>
+</body>
+</html>
